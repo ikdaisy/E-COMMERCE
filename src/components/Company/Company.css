@@ -1,0 +1,146 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.prof-container{
+    width: 100%;
+    height: 80vh;
+    /* background-color: brown; */
+    display: flex;
+}
+
+.left{
+    width: 40%;
+    height: 86vh;
+    /* background-color: blue; */
+    line-height: 5vh;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    /* border-right: 2px black; */
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    justify-content: center;
+    display: grid;
+}
+
+
+.username{
+    margin-bottom: 1%;
+    font-size: 30px;
+    color: rgb(9, 9, 87);
+}
+
+ .prof-container .left img{
+    width: 100px;
+    height: 100px;
+    /* margin-top: 20px; */
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 50px;
+    
+}
+.details h5{
+    margin-right:1%;
+    font-size: 16px;
+    color: rgb(14, 14, 82);
+}
+
+.details{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 1%;
+    /* margin-bottom: 1%; */
+
+}
+
+.right{
+    /* display: flex; */
+    /* flex-wrap: wrap; */
+    /* background-color: black; */
+    width: 65%;
+    height: 80vh;
+}
+ 
+  .addbtn{
+    background-color: black;
+    color: white;
+    border: 2px solid white;
+    font-size: 30px;
+    padding: 0px 10px;
+    margin-right: 20px;
+    border-radius: 10%;
+    margin: 20px;
+    font-weight: 600;
+    cursor: pointer;
+
+  }
+  /* ------------------ */
+
+  table{
+    padding: 10px 15px;
+}
+
+ th{
+    text-align: left;
+   
+    /* padding-left: 40px; */
+    font-size: 17px;
+ }
+ td{
+    font-size: 15px;
+   /* padding-top: 5px; */
+   /* padding: 20px 20px 10px 20px; */
+
+
+ }
+
+
+.img img {
+   
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    /* background-color: pink; */
+    border: 4px solid white; /* White border around the image */
+}
+
+
+.actions{
+    /* padding-top: 20px; */
+    text-align: center;
+
+}
+.edit-btn{
+    background-color: rgb(19, 19, 241);
+    color: white;
+    padding: 10px 30px;
+    border: none;
+    margin-right: 20px;
+    border-radius: 8px;
+
+}
+
+.delete-btn{
+    background-color: rgb(168, 5, 5);
+    color: white;
+    margin-right: 20px;
+
+    padding: 10px 30px;
+    border: none;
+    border-radius: 8px;
+
+}
+.log-out-btn{
+    background-color: black;
+    color: white;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 8px;
+    margin-top: 10px;
+    
+
+}
+  
