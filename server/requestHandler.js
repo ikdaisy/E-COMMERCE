@@ -129,7 +129,7 @@ export async function getUser(req,res) {
     const address = await addressSchema.findOne({userID:_id})
 
     console.log(data);
-    res.status(200).send({data,address})
+    res.status(200).send(data)
    } catch (error) {
     return res.status(400).send(error)
    }
@@ -146,15 +146,7 @@ export async function deleteUser(req,res) {
     })  
 }
 
-export async function deleteAddress(req,res) {
-    const _id=req.user 
-    await addressSchema.deleteOne({userID:_id}).then(()=>{
-        res.status(200).send({msg:"Successfully deleted"})
-    }).catch (()=>{
-        return res.status(400).send(error)
 
-    })  
-}
 
 export async function editUser(req,res) {
     const _id=req.user 
@@ -169,28 +161,67 @@ export async function editUser(req,res) {
 }
 
 
-export async function editAddress(req,res) {
-    const _id=req.user 
-    const {place,city,pincode}=req.body
-    const user = await addressSchema.findOne({userID:_id})
-    if(user){
-        await addressSchema.updateOne({userID:_id},{$set:{place,city,pincode}}).then(()=>{
-            res.status(201).send({msg:"Successfully Updated"})
-        }).catch (()=>{
-            return res.status(400).send(error)
-    
+
+//address 
+export async function addAddress(req,res){
+    try {
+        const{house,place,pincode}=req.body
+        if(!(house&&place&&pincode))
+            return res.status(404).send({msg:"Oops! You forgot to fill in the fields."})
+        await addressSchema.create({house,place,pincode}).then(()=>{
+            res.status(201).send({msg:"New address added to your profile"})
+        }).catch((error)=>{
+            res.status(404).send({msg:error})  
         })
 
+    } catch (error) {
+        console.log(error);
+        
     }
-    else{
-        await addressSchema.create({userID:_id,place,city,pincode}).then(()=>{
-                    res.status(201).send({msg:"Successfully Added"})
-                }).catch (()=>{
-                    return res.status(400).send(error)
-            
-                })
-    }  
 }
+
+
+export async function displayAddress(req,res) {
+    try {
+        const {...addr}=req.body
+        const address=await addressSchema.find()
+        res.status(200).send(address)
+    } catch (error) {
+        console.log(error);
+        res.status(404).send({msg:error})    
+    }
+}
+export async function editAddress(req,res) {
+    try {
+        const _id=req.params
+        const {...addr}=req.body
+        await addressSchema.updateOne({_id},{$set:{...addr}}).then(()=>{
+            res.status(201).send({msg:"Address Successfully Updated"})
+        }).catch((error)=>{
+            console.log(error);
+            
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(404).send({msg:error})    
+    }
+}
+
+export async function deleteAddress(req,res) {
+    try {
+        const _id=req.params
+        const address=await addressSchema.deleteOne({_id}).then(()=>{
+            res.status(200).send({msg:'Successfully Deleted'})
+        }).catch((error)=>{
+            console.log(error);
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(404).send({msg:error})    
+    }
+}
+
+//company
 
 export async function editCompanyData(req,res) {
     const _id=req.user 
@@ -233,12 +264,34 @@ export async function getCompanyData(req,res) {
 
 // add product
 export async function addProduct(req,res) {
-    const {name,price,category,photo,sizes}=req.body
-    await productSchema.create({name,price,category,photo,sizes}).then(()=>{
+    const {name,price,category,photo,sizes,description}=req.body
+    await productSchema.create({name,price,category,photo,sizes,description}).then(()=>{
         res.status(201).send({msg:"Successfully Added"})
     }).catch((error)=>{
          res.status(404).send(error)
     })
+}
+// update product 
+
+export async function updateProduct(req,res) {
+    const {...data}=req.body
+    const {_id}=req.params
+    await productSchema.updateOne({_id},{$set:{...data}}).then(()=>{
+        res.status(200).send({msg:"Successfully Updated"})
+    }).catch((error)=>{
+         res.status(404).send(error)
+    })  
+}
+
+//delete product
+
+export async function deleteProduct(req,res) {
+    const {_id}=req.params
+    await productSchema.deleteOne({_id}).then(()=>{
+        res.status(200).send({msg:"Successfully Deleted"})
+    }).catch((error)=>{
+         res.status(404).send(error)
+    })  
 }
 
 //add category
@@ -263,6 +316,33 @@ export async function addCategory(req,res) {
 export async function getProducts(req,res) {
     try {
         const data=await productSchema.find()
+        return res.status(200).send(data)
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(404).send(error)
+    }
+    
+}
+
+export async function getProduct(req,res) {
+    try {
+        const {_id}=req.params
+        const data=await productSchema.findOne({_id})
+        return res.status(200).send(data)
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(404).send(error)
+    }
+    
+}
+
+
+export async function getCatProducts(req,res) {
+    try {
+        const {category}=req.params
+        const data=await productSchema.find({category})
         return res.status(200).send(data)
         
     } catch (error) {

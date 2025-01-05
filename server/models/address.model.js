@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const addressSchema= mongoose.Schema({
     userID:{type:String},
+    house:{type:String},
     place:{type:String},
-    city:{type:String},
     pincode:{type:String}
     
 

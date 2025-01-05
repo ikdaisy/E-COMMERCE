@@ -61,7 +61,7 @@ const Nav = ({user,setUser}) => {
             >
               <img
                 className="w-full h-full object-cover"
-                src="https://www.w3schools.com/w3images/avatar2.png"
+                src="4.jpg"
                 alt="Profile Picture"
               />
             </button>

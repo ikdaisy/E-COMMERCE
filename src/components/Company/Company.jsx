@@ -62,7 +62,7 @@ const Company = ({ setUser }) => {
 
   return (
     <>
-      <div className="prof-container flex flex-col lg:flex-row md:flex-row sm:flex-row gap-6 p-4">
+      <div className=" flex  flex-col lg:flex-row md:flex-row sm:flex-row gap-6 p-4">
         {/* Left Section: Profile Information */}
         <div className="left flex-1 bg-white p-4 rounded-lg shadow-lg">
           <table className="table-auto w-full">
@@ -84,9 +84,9 @@ const Company = ({ setUser }) => {
                 <td className="bio p-2">{proBool ? companyData.place : '-'}</td>
               </tr>
               <tr>
-                <td className="actions p-2" colSpan="2">
+                <td className="actions p-2 " colSpan="2">
                   <Link to={'/editcompany'}>
-                    <button type="button" className="edit-btn mt-4 mx-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                    <button type="button" className="edit-btn mt-12 mx-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
                       {proBool ? 'EDIT' : 'CREATE'}
                     </button>
                   </Link>
@@ -100,18 +100,19 @@ const Company = ({ setUser }) => {
         </div>
 
         {/* Right Section: Category Cards and Add Product Button */}
-        <div className="right flex-1 bg-white p-4 rounded-lg shadow-lg">
+        <div className="right flex-1 bg-white p-4 rounded-lg shadow-lg h-96">
           <Link to={'/addproduct'}>
-            <button className="addbtn bg-green-500 text-white px-5 rounded-full hover:bg-green-600 mb-6">
+            <button className="addbtn bg-green-500 text-white px-5 py-2 rounded-full hover:bg-green-600 mb-6">
               +
             </button>
           </Link>
 
-          <div className="flex flex-wrap gap-6 mx-3 mt-6">
+          <div className="flex flex-wrap gap-6 mx-3 mt-6 ">
             {/* Display Category Cards with dynamic count */}
             {categories.map((ct) => {
               const productCount = getCategoryProductCount(ct.category); // Get count for this category
               return (
+               <Link to={`/catproducts/${ct.category}`}>
                 <div key={ct._id} className="relative w-full sm:w-40 md:w-48 lg:w-56 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
                   <div className="absolute top-2 right-2 bg-black bg-opacity-60 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
                     {productCount} {/* Display the dynamic count */}
@@ -120,6 +121,7 @@ const Company = ({ setUser }) => {
                     <div className="text-xl font-semibold text-center">{ct.category}</div> {/* Display category name */}
                   </div>
                 </div>
+               </Link>
               );
             })}
           </div>

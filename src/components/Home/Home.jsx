@@ -17,7 +17,7 @@ const Home = ({setUser}) => {
       try {
         const res=await axios.get(`${api}/getuser`,{headers:{"Authorization":`Bearer ${token}`}})
         console.log(res);
-        setUser(res.data.data.username)
+        setUser(res.data.username)
       
        } catch (error) {
         console.log(error);

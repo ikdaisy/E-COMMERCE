@@ -12,6 +12,8 @@ import Nav from './components/Nav/Nav'
 import EditCompany from './components/EditCompany/EditCompany'
 import AddProduct from './components/AddProduct/AddProduct'
 import Products from './components/Products/Products'
+import ProductDesc from './components/ProductDescription/ProductDesc'
+import EditProduct from './components/EditProduct/EditProduct'
 
 
 
@@ -32,7 +34,11 @@ function App() {
 
           <Route path='/company' element={<Company setUser={setUser}/>}/>
           <Route path='/addproduct' element={<AddProduct setUser={setUser} />}/>
-          <Route path='/allproducts' element={<Products setUser={setUser} />}/>
+          <Route path='/catproducts/:category' element={<Products setUser={setUser} />}/>
+          <Route path='/proddesc/:_id' Component={ProductDesc}/>
+          <Route path='/editproduct/:_id'  element={<EditProduct/>}/>
+
+
 
 
 
