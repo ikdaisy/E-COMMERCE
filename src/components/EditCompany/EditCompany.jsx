@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
+import Swal from 'sweetalert2';
 
 import './EditCompany.css'
 
@@ -34,7 +35,18 @@ const EditCompany = ({setUser}) => {
         const res = await axios.post("http://localhost:3000/api/editCompanyData",updateData,{headers:{"Authorization":`Bearer ${token}`}})
         console.log(res);
         if(res.status==201){
-          alert(res.data.msg)
+          Swal.fire({
+                     title: 'Updated!',
+                     text: res.data.msg,
+                     icon: 'success',
+                     confirmButtonText: 'OK',
+                     customClass: {
+                       popup: 'bg-white rounded-lg shadow-md',
+                       title: 'text-lg font-semibold text-gray-800',
+                       htmlContainer: 'text-sm text-gray-600',
+                       confirmButton: 'bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700',
+                     },
+                   });
           navigate('/company')
          
         }

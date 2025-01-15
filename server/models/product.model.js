@@ -6,7 +6,10 @@ const productSchema= mongoose.Schema({
     photo:{type:Array},
     category:{type:String},
     description:{type:String},
-    sizes:{type:Array}
+    sizes:{type:Array},
+    sellerID:{type:String}
+    
+
    
 })
 

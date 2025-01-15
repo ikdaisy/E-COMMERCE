@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import Api from '../Api';
+import Swal from 'sweetalert2';
+
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 function EditProduct() {
   const navigate = useNavigate();
+  const token = localStorage.getItem('Token');
+
   const { _id } = useParams(); // Get product ID from URL
   const api = Api();
   const [sizes, setSizes] = useState([{ size: "", quantity: "" }]);
@@ -24,8 +28,9 @@ function EditProduct() {
 
   const fetchProductDetails = async () => {
     try {
-      const res = await axios.get(`${api}/getproduct/${_id}`);
-      const data = res.data;
+      const res=await axios.get(`${api}/getproduct/${_id}`,{ headers: { "authorization": `Bearer ${token}` } })
+
+      const data = res.data.product;
       setProductName(data.name);
       setPrice(data.price);
       setDescription(data.description);
@@ -76,7 +81,18 @@ function EditProduct() {
       console.log(res);
       
       if (res.status === 200) {
-        alert("Product updated successfully");
+        Swal.fire({
+               title: 'Updated!',
+               text: res.data.msg,
+               icon: 'success',
+               confirmButtonText: 'OK',
+               customClass: {
+                 popup: 'bg-white rounded-lg shadow-md',
+                 title: 'text-lg font-semibold text-gray-800',
+                 htmlContainer: 'text-sm text-gray-600',
+                 confirmButton: 'bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700',
+               },
+             });
         navigate(`/proddesc/${_id}`);
       }
     } catch (error) {
@@ -84,23 +100,36 @@ function EditProduct() {
     }
   };
 
-  const handleFile = async (e) => {
-    const arr = Object.values(e.target.files);
-    arr.map(async (file) => {
-      const photo = await convertToBase64(file);
-        
-    });
-    setImages(photo)
+   // Handle file upload and update images
+   const handleFile = async (e) => {
+    const files = Object.values(e.target.files); // Get uploaded files
+    console.log(files);
+
+    // Clear current images and add the new ones
+    const newImages = await Promise.all(
+      files.map(async (file) => {
+        const photo = await convertToBase64(file); // Convert to Base64
+        return photo;
+      })
+    );
+
+    setImages(newImages); // Replace current images with new ones
   };
 
+  // Convert file to Base64
   function convertToBase64(file) {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
       fileReader.readAsDataURL(file);
-      fileReader.onload = () => resolve(fileReader.result);
-      fileReader.onerror = (error) => reject(error);
+      fileReader.onload = () => {
+        resolve(fileReader.result); // Resolve with Base64 data
+      };
+      fileReader.onerror = (error) => {
+        reject(error); // Reject on error
+      };
     });
   }
+
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md">

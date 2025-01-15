@@ -86,13 +86,13 @@ const Company = ({ setUser }) => {
               <tr>
                 <td className="actions p-2 " colSpan="2">
                   <Link to={'/editcompany'}>
-                    <button type="button" className="edit-btn mt-12 mx-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                    <button type="button" className="edit-btn mt-12 mx-12 bg-blue-900 text-white px-10 py-2 rounded-lg hover:bg-blue-800">
                       {proBool ? 'EDIT' : 'CREATE'}
                     </button>
                   </Link>
-                  <button type="button" className="delete-btn mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                  {/* <button type="button" className="delete-btn mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
                     DELETE
-                  </button>
+                  </button> */}
                 </td>
               </tr>
             </tbody>
@@ -102,10 +102,11 @@ const Company = ({ setUser }) => {
         {/* Right Section: Category Cards and Add Product Button */}
         <div className="right flex-1 bg-white p-4 rounded-lg shadow-lg h-96">
           <Link to={'/addproduct'}>
-            <button className="addbtn bg-green-500 text-white px-5 py-2 rounded-full hover:bg-green-600 mb-6">
-              +
+            <button className="addbtn bg-blue-900 text-white px-5 py-2 rounded-full hover:bg-blue-500 mb-6">
+              Add Product
             </button>
           </Link>
+          
 
           <div className="flex flex-wrap gap-6 mx-3 mt-6 ">
             {/* Display Category Cards with dynamic count */}
@@ -113,8 +114,8 @@ const Company = ({ setUser }) => {
               const productCount = getCategoryProductCount(ct.category); // Get count for this category
               return (
                <Link to={`/catproducts/${ct.category}`}>
-                <div key={ct._id} className="relative w-full sm:w-40 md:w-48 lg:w-56 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                  <div className="absolute top-2 right-2 bg-black bg-opacity-60 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
+                <div key={ct._id} className="relative w-full sm:w-40 md:w-48 lg:w-56 h-10 py-2 px-4 border border-blue-500 text-blue-600 rounded-md hover:bg-grey hover:text-blue-900 transition-all shadow-lg rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                  <div className="absolute top-1 right-2 bg-blue-900  text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
                     {productCount} {/* Display the dynamic count */}
                   </div>
                   <div className="flex flex-col justify-center items-center h-full">

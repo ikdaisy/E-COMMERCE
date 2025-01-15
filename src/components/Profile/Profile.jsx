@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import Api from '../Api';
 import { useNavigate, Link } from 'react-router-dom';
 import { DotsVerticalIcon } from '@heroicons/react/solid';
+import Swal from 'sweetalert2';
 
-const Profile = ({setUser}) => {
+const Profile = ({setUser,type,setType}) => {
   const token = localStorage.getItem('Token');
   const navigate = useNavigate();
   const api = Api();
@@ -35,6 +36,7 @@ const Profile = ({setUser}) => {
       const { data } = await axios.get(`${api}/getuser`, { headers: { "authorization": `Bearer ${token}` } });
       console.log(data);
       setUser(data.username)
+      setType(data.accountType)
       setProfileData(data);
     } else {
       navigate('/signin');
@@ -42,7 +44,7 @@ const Profile = ({setUser}) => {
   };
 
   const fetchAddressData = async () => {
-    const { data } = await axios.get(`${api}/getAddress`);
+    const { data } = await axios.get(`${api}/getAddress`,{ headers: { "authorization": `Bearer ${token}` } });
     setAddressData(data);
     setDropdownStates(new Array(data.length).fill(false)); // Initialize dropdown states for each address
   };
@@ -58,7 +60,18 @@ const Profile = ({setUser}) => {
   const profilehandleSubmit = async () => {
     try {
       const { data } = await axios.put(`${api}/edituser`, profileData, { headers: { "authorization": `Bearer ${token}` } });
-      alert(data.msg);
+      Swal.fire({
+        title: 'Success!',
+        text: `${data.msg}`,
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-white rounded-lg shadow-md ',
+          title: 'text-lg font-semibold text-gray-800',
+          htmlContainer: 'text-sm text-gray-600',
+          confirmButton: 'bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700',
+        },
+      });
       setIsEditing(false);
     } catch (error) {
       console.log(error);
@@ -66,8 +79,19 @@ const Profile = ({setUser}) => {
   };
 
   const handleAddrSubmit = async () => {
-    const { data } = await axios.post(`${api}/address`, newAddress);
-    alert(data.msg);
+    const { data } = await axios.post(`${api}/address`, newAddress,{ headers: { "authorization": `Bearer ${token}` } });
+    Swal.fire({
+      title: 'Success!',
+      text: `${data.msg}`,
+      icon: 'success',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-white rounded-lg shadow-md ',
+        title: 'text-lg font-semibold text-gray-800',
+        htmlContainer: 'text-sm text-gray-600',
+        confirmButton: 'bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700',
+      },
+    });
     setNewAddress({
       place: '',
       house: '',
@@ -90,22 +114,72 @@ const Profile = ({setUser}) => {
   const handleDelete = async(id,index) => {
     // console.log(id);
     // Add deletion logic here if needed
-    if(confirm('Please confirm that you want to delete this address.')){
-      try {
-        const { data } = await axios.delete(`${api}/deleteAddress/${id}`);
-        alert(data.msg);
-        fetchAddressData()
-      } catch (error) {
-        console.log(error);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Please confirm that you want to delete this address.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true,
+      customClass: {
+        popup: 'bg-white rounded-lg shadow-md',
+        title: 'text-lg font-semibold text-gray-800',
+        htmlContainer: 'text-sm text-gray-600',
+        confirmButton: 'bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700',
+        cancelButton: 'bg-gray-200 text-gray-800 px-5 py-2 rounded hover:bg-gray-300',
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const { data } = await axios.delete(`${api}/deleteAddress/${id}`);
+          Swal.fire({
+            title: 'Deleted!',
+            text: data.msg,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-white rounded-lg shadow-md',
+              title: 'text-lg font-semibold text-gray-800',
+              htmlContainer: 'text-sm text-gray-600',
+              confirmButton: 'bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700',
+            },
+          });
+          fetchAddressData()
+        } catch (error) {
+          Swal.fire({
+            title: 'Error!',
+            text: error.response?.data?.msg || 'Something went wrong.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-white rounded-lg shadow-md',
+              title: 'text-lg font-semibold text-gray-800',
+              htmlContainer: 'text-sm text-gray-600',
+              confirmButton: 'bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700',
+            },
+          });
+        }
       }
-    }
+    });
   };
 
   const handleSave = async (id, index) => {
     const updatedAddress = { ...addressData[index], ...newAddress }; // Merge newAddress into the current address
     try {
       const { data } = await axios.put(`${api}/editAddress/${id}`, updatedAddress);
-      alert(data.msg);
+      Swal.fire({
+        title: 'Updated!',
+        text: data.msg,
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-white rounded-lg shadow-md',
+          title: 'text-lg font-semibold text-gray-800',
+          htmlContainer: 'text-sm text-gray-600',
+          confirmButton: 'bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700',
+        },
+      });
       setEditingAddressIndex(null); // Stop editing
       fetchAddressData(); // Refresh the address data
     } catch (error) {
@@ -132,36 +206,54 @@ const Profile = ({setUser}) => {
     <div className="min-h-screen  font-sans px-10 flex justify-center flex-col md:flex-row">
       <div className="  p-6 bg-white border-b md:border-r border-gray-300 text-center md:text-center">
         <div className='md:grid justify-center flex-wrap mt-10'>
-          <img
-            src="./4.jpg"
-            alt="Profile"
-            className="w-28 h-28 rounded-full mx-auto md:mx-0 mb-4"
-          />
+        <img
+  src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGNsYXNzPSJ3LTI0IGgtMjQiIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZVdpZHRoPSIyIj48cGF0aCBzdHJva2VMaW5lY2FwPSJyb3VuZCIgc3Ryb2tlTGluZWpvaW49InJvdW5kIiBkPSJNMTIgMTJjMi40ODUgMCA0LjUtMi4wMTUgNC41LTQuNVMxNC40ODUgMyAxMiAzIDcuNSA1LjAxNSA3LjUgNy41IDkuNTE1IDEyIDEyIDEyWk0xOS41IDIxdjEtMi41YzAtMi40ODUtMi4wMTUtNC41LTQuNS00LjVoLTZjLTIuNDg1IDAtNC41IDIuMDE1LTQuNSA0LjVWMjEiLz48L3N2Zz4="
+  alt="User Icon"
+  className="w-24 h-24 border border-black font-bold rounded-full p-1"
+/>
           <p className="text-xs text-gray-500"></p>
           <p className="text-2xl font-semibold text-gray-800 mt-3">{profileData.username}</p>
         </div>
-        <div className="space-y-4 mt-16">
-          <button
-            onClick={() => setCurrentView('profile')}
-            className="w-1/2 py-2 px-4 mx-5 bg-green-600 text-white rounded-md hover:bg-green-700"
-          >
-            View Profile
-          </button>
-          <button
-            onClick={() => setCurrentView('address')}
-            className="w-1/2 py-2 px-4 mx-5 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Manage Address
-          </button>
-        </div>
+        <div className="grid grid-cols-1 gap-4 mt-16 md:grid-cols-2 md:gap-6">
+  <button
+    onClick={() => setCurrentView('profile')}
+    className="py-2 px-4 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-600 hover:text-white transition-all"
+  >
+    View Profile
+  </button>
+  <button
+    onClick={() => setCurrentView('address')}
+    className="py-2 px-4 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-600 hover:text-white transition-all"
+  >
+    Manage Address
+  </button>
+ <Link to={'/orders'}>
+ <button
+    className="py-2 px-12 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-600 hover:text-white transition-all"
+  >
+    My Orders
+  </button>
+ </Link>
+ <Link to={'/cart'}> <button
+    className="py-2 px-12 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-600 hover:text-white transition-all"
+  >
+    My Cart
+  </button></Link>
+  <Link to={'/wishlist'}><button
+    className="py-2   px-9 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-600 hover:text-white transition-all"
+  >
+    My Wishlist
+  </button></Link>
+</div>
+
       </div>
 
       <div className="w-full border-b md:w-2/3 p-6 bg-white">
         {currentView === 'profile' ? (
           <div>
-            <Link to={'/company'} className='float-right'>
+            {type=="Seller"?(<Link to={'/company'} className='float-right'>
               <button className='bg-black text-white border font-semibold rounded-md px-2 shadow-md py-1 '>SELL</button>
-            </Link>
+            </Link>):(<></>)}
             <h2 className="text-3xl font-semibold text-gray-800 mb-4">Profile Details</h2>
             <div className="space-y-4">
               <div>

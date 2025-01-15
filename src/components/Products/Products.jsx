@@ -10,6 +10,8 @@ function Products() {
   const api = Api()
 //   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const {category}=useParams()
 
 
@@ -26,6 +28,11 @@ const fetchProducts=async()=>{
   }
 }
 
+const filterProducts= products.filter((product)=>product.name.toLowerCase().startsWith(searchQuery.toLowerCase()))
+
+
+
+
   
  
 
@@ -35,7 +42,7 @@ const fetchProducts=async()=>{
       <div className="mb-6">
         <input
           type="text"
-          placeholder="Filter products..."
+          placeholder="Filter products..." onChange={(e)=>setSearchQuery(e.target.value)}
           className=" w-2/4 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
@@ -43,7 +50,7 @@ const fetchProducts=async()=>{
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         
-          {products.map((dt)=><Link to={`/proddesc/${dt._id}`}><div  className="border cursor-pointer border-gray-200 rounded-lg overflow-hidden shadow-md">
+          {filterProducts.map((dt)=><Link to={`/proddesc/${dt._id}`}><div  className="border cursor-pointer border-gray-200 rounded-lg overflow-hidden shadow-md">
             <img
               src={dt.photo[0]} className="w-full h-48 object-cover"
             />
@@ -54,7 +61,11 @@ const fetchProducts=async()=>{
             </div>
           </div></Link>)}
       
+      
       </div>
+      {filterProducts.length==0 &&(
+        <p className="text-center text-lg text-gray mt-8">No products found !!</p>
+      )}
     </div>
   );
 }

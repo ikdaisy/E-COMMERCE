@@ -42,7 +42,9 @@ const SignUp = () => {
                 });
                 
             }
-            navigate('/signin')
+            setTimeout(() => {
+                navigate('/signin');
+               }, 5000);
         
         
        } catch (error) {

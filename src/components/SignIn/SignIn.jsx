@@ -30,32 +30,34 @@ const SignIn = () => {
              console.log(res);
               if(res.status==200){
                 localStorage.setItem("Token",res.data.token)
-                //    toast.success(`🦄 ${res.data.msg}!`, {
-                //      position: "bottom-center",
-                //      autoClose: 5000,
-                //      hideProgressBar: false,
-                //      closeOnClick: false,
-                //      pauseOnHover: true,
-                //      draggable: true,
-                //      progress: undefined,
-                //      theme: "dark",
-                //      });
+                   toast.success(`🦄 ${res.data.msg}!`, {
+                     position: "bottom-center",
+                     autoClose: 3000,
+                     hideProgressBar: false,
+                     closeOnClick: false,
+                     pauseOnHover: true,
+                     draggable: true,
+                     progress: undefined,
+                     theme: "dark",
+                     });
                      
-                     navigate('/')
+                     setTimeout(() => {
+                        navigate('/');
+                       }, 3000);
                  }
              
              
             } catch (error) {
-            //   toast.error(`🦄 ${error.response.data.msg}!`, {
-            //        position: "bottom-center",
-            //        autoClose: 5000,
-            //        hideProgressBar: false,
-            //        closeOnClick: false,
-            //        pauseOnHover: true,
-            //        draggable: true,
-            //        progress: undefined,
-            //        theme: "dark",
-            //        });
+              toast.error(`🦄 ${error.response.data.msg}!`, {
+                   position: "bottom-center",
+                   autoClose: 3000,
+                   hideProgressBar: false,
+                   closeOnClick: false,
+                   pauseOnHover: true,
+                   draggable: true,
+                   progress: undefined,
+                   theme: "dark",
+                   });
              
             }
      
@@ -99,7 +101,7 @@ const SignIn = () => {
                                 <div className="flex items-center justify-between">
                                     <label htmlFor="" className="text-base font-medium text-gray-900"> Password </label>
 
-                                    <a href="#" title="" className="text-sm font-medium text-orange-500 transition-all duration-200 hover:text-orange-600 focus:text-orange-600 hover:underline"> Forgot password? </a>
+                                    <Link to={'/email'}  className="text-sm font-medium text-orange-500 transition-all duration-200 hover:text-orange-600 focus:text-orange-600 hover:underline"> Forgot password? </Link>
                                 </div>
                                 <div className="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
                                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
