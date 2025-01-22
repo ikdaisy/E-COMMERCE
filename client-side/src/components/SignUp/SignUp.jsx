@@ -9,21 +9,67 @@ import { useNavigate } from 'react-router-dom';
 const SignUp = () => {
   const api=Api()
   const navigate = useNavigate()
-
+  const email = localStorage.getItem("Email");
     const [userData,setUserData]=useState({
         username:"",
-        email:"",
+        email:email,
         phone:"",
         password:"",
         cpassword:"",
         accountType:"",
     })
+    const [errors, setErrors] = useState({
+        password: "",
+        cpassword: "",
+        phone: "",
+      });
 
-    const handleChange=async(e)=>{
-        setUserData((pre)=>({...pre,[e.target.name]:e.target.value}))
-
-    }
-
+      const handleChange = async (e) => {
+        const { name, value } = e.target;
+      
+        // Update the user data
+        setUserData((prev) => ({ ...prev, [name]: value }));
+      
+        // Validation logic
+        if (name === "password") {
+          const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/;
+          if (!value) {
+            setErrors((prev) => ({ ...prev, password: "" })); // Handle empty field
+          } else if (!passwordRegex.test(value)) {
+            setErrors((prev) => ({
+              ...prev,
+              password: "Password must be 8-16 characters, include uppercase, lowercase, number, and special character.",
+            }));
+          } else {
+            setErrors((prev) => ({ ...prev, password: "" }));
+          }
+        }
+      
+        if (name === "cpassword") {
+          if (!value) {
+            setErrors((prev) => ({ ...prev, cpassword: "" })); // Handle empty field
+          } else if (value !== userData.password) {
+            setErrors((prev) => ({ ...prev, cpassword: "Passwords do not match." }));
+          } else {
+            setErrors((prev) => ({ ...prev, cpassword: "" }));
+          }
+        }
+      
+        if (name === "phone") {
+          const phoneRegex = /^\d{10}$/;
+          if (!value) {
+            setErrors((prev) => ({ ...prev, phone: "" })); // Handle empty field
+          } else if (!phoneRegex.test(value)) {
+            setErrors((prev) => ({
+              ...prev,
+              phone: "Phone number must be a 10-digit number.",
+            }));
+          } else {
+            setErrors((prev) => ({ ...prev, phone: "" }));
+          }
+        }
+      };
+      
     const handleSubmit=async(e)=>{
        e.preventDefault()
        try {
@@ -97,24 +143,7 @@ const SignUp = () => {
                                 </div>
                             </div>
 
-                            <div>
-                                <label htmlFor="" className="text-base font-medium text-gray-900"> Email address </label>
-                                <div className="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
-                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                                        </svg>
-                                    </div>
-
-                                    <input
-                                        type="email"
-                                        name="email" onChange={handleChange}
-                                       
-                                        placeholder="Enter email to get started"
-                                        className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
-                                    />
-                                </div>
-                            </div>
+                           
                             <div>
                                 <label htmlFor="" className="text-base font-medium text-gray-900"> Phone </label>
                                 <div className="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
@@ -131,6 +160,8 @@ const SignUp = () => {
                                         placeholder="Enter your phone number"
                                         className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
                                     />
+            {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+
                                 </div>
                             </div>
 
@@ -155,6 +186,8 @@ const SignUp = () => {
                                         placeholder="Enter your password"
                                         className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
                                     />
+            {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+
                                 </div>
                             </div>
                             <div>
@@ -178,6 +211,8 @@ const SignUp = () => {
                                         placeholder="Confirm your password"
                                         className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
                                     />
+            {errors.cpassword && <p className="text-red-500 text-sm">{errors.cpassword}</p>}
+
                                 </div>
                             </div>
 

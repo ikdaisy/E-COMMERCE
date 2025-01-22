@@ -10,9 +10,43 @@ const ConfirmPassword = () => {
     const email=localStorage.getItem('Email')
     console.log(email);
     
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+ 
+    const [data,setData]=useState({
+      password:"",
+      cpassword:""
+    })
+    const [errors, setErrors] = useState({
+      password:"",
+      cpassword:""
+    });
+  
+    const handleChange=(e)=>{
+      const { name, value } = e.target;
+      setData((prev) => ({ ...prev, [name]: value }));
+  
+      // Validation while typing
+      if (name === "password") {
+        const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/;
+       if(!value){
+        setErrors((prev) => ({ ...prev, password: "" }));
+  
+       }
+        else if (!passwordRegex.test(value)) {
+          setErrors((prev) => ({ ...prev, password: "Password must be 8-16 characters, include uppercase, lowercase, number, and special character." }));
+        } else {
+          setErrors((prev) => ({ ...prev, password: "" }));
+        }
+      }
+  
+      if (name === "cpassword") {
+        if (value !== data.password) {
+          setErrors((prev) => ({ ...prev, cpassword: "Passwords do not match." }));
+        } else {
+          setErrors((prev) => ({ ...prev, cpassword: "" }));
+        }
+      }
+    }
+  
 
   const handleSubmit =async (e) => {
     e.preventDefault();
@@ -50,13 +84,15 @@ const ConfirmPassword = () => {
             </label>
             <input
               type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+             
+              onChange={handleChange}
               className="block w-full mt-2 p-3 border rounded-md border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:outline-none"
               placeholder="Enter your password"
               required
             />
+          {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+
           </div>
 
           {/* Confirm Password Field */}
@@ -66,17 +102,19 @@ const ConfirmPassword = () => {
             </label>
             <input
               type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              name="cpassword"
+            
+              onChange={handleChange}
               className="block w-full mt-2 p-3 border rounded-md border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:outline-none"
               placeholder="Confirm your password"
               required
             />
+          {errors.cpassword && <p className="text-red-500 text-sm">{errors.cpassword}</p>}
+
           </div>
 
-          {/* Error Message */}
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+       
+          
 
           {/* Submit Button */}
           <button

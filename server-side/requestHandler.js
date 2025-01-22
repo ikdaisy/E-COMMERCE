@@ -534,7 +534,7 @@ export async function getProduct(req,res) {
         const isOnCart = await cartSchema.exists({"product._id":_id,buyerID:id});
 
 
-        console.log(isOnCart);
+        // console.log(isOnCart);
         return res.status(200).send({product,username:user.username,profile:user.profile,accountType:user.accountType,isOnWishlist,isOnCart})
         
     } catch (error) {
@@ -715,7 +715,7 @@ export async function getCartCount(req,res) {
 export async function getSingleCart(req,res) {
     try {
         const {_id}=req.params;
-        console.log(_id);
+        // console.log(_id);
         
         const id=req.user;
         const user=await userSchema.findOne({_id:id});
@@ -779,7 +779,7 @@ export async function addOrders(req, res) {
 export async function addSingleOrder(req, res) {
         try {
             const { selectedAddress, productId, size, quantity,totalWithTax } = req.body;
-            console.log(selectedAddress, productId, size, quantity);
+            // console.log(selectedAddress, productId, size, quantity);
             
             const _id = req.user;
     
