@@ -10,6 +10,9 @@ const EditCompany = ({setUser}) => {
     const token = localStorage.getItem("Token")
     const [updateData,setUpdateData]=useState({})
     const [proBool,setProBool]=useState(false);
+     const [errors, setErrors] = useState({
+           email:""
+          });
     useEffect(()=>{
         fetchUserData()
   
@@ -54,7 +57,25 @@ const EditCompany = ({setUser}) => {
         }
 
         const handleChange=(e)=>{
-            setUpdateData((pre)=>({...pre,[e.target.name]:e.target.value}))
+            // setUpdateData((pre)=>({...pre,[e.target.name]:e.target.value}))
+            const { name, value } = e.target;
+      
+            // Update the user data
+            setUpdateData((prev) => ({ ...prev, [name]: value }));
+            if (name === "email") {
+                  const emailRegex = /^\S+@\S+\.\S+$/;
+              
+              if (!value) {
+                setErrors((prev) => ({ ...prev, email: "" })); // Handle empty field
+              } else if (!emailRegex.test(value)) {
+                setErrors((prev) => ({
+                  ...prev,
+                  email:  "Invalid email",
+                }));
+              } else {
+                setErrors((prev) => ({ ...prev, email: "" }));
+              }
+            }
             
         }
 
@@ -106,6 +127,8 @@ const EditCompany = ({setUser}) => {
       onChange={handleChange}
       className="mt-1 w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 text-gray-900"
     />
+            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+
   </div>
 
   <div className="mb-4">

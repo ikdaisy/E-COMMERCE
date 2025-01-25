@@ -12,6 +12,7 @@ const ConfirmPassword = () => {
     
  
     const [data,setData]=useState({
+      email:email,
       password:"",
       cpassword:""
     })
@@ -50,10 +51,8 @@ const ConfirmPassword = () => {
 
   const handleSubmit =async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-    } 
-    const res = await axios.post(`${Api()}/changepassword`,{email,password})
+   
+    const res = await axios.post(`${Api()}/changepassword`,data)
    toast.success(`🦄 ${res.data.msg}!`, {
                         position: "bottom-center",
                         autoClose: 5000,
